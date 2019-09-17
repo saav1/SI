@@ -1,0 +1,28 @@
+
+::CLASES DEL JUEGO::
+
+Aestrella{
+
+	//Atributos
+	public bool pacman;
+	public int numeroFantasma = 0;
+	
+	char camino[][];		//Camino
+	int camino_expandido[][];	//Casillas expandidas
+	int expandidos;			//Número de nodos expandidos
+	double coste_total;		//Coste del camino
+
+	//Constructor 
+	Aestrella(bool esPacman){
+		pacman = esPacman;	
+	}
+
+	void setNumFantasma(int num){
+		numeroFantasma = num	
+	}
+
+	public int run(int controlador, Laberinto laberinto){
+		
+	}
+
+}
