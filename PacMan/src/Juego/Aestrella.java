@@ -99,19 +99,200 @@ public class Aestrella {
         //Número de nodos expandidos
         expandidos=0;
     }   
-           
+
+    class Position{
+        int x, y;
+        
+        Position(){
+            this.x = 0;
+            this.y = 0;
+        }
+        
+        Position(int[] aX){
+            this.x = aX[0];
+            this.y = aX[1];
+        }
+        
+        Position(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+    };
+
+   
+    class Nodo{
+        Nodo padre;
+        ArrayList<Nodo> vecinos = new ArrayList<>();
+        Position pos;
+        double f, g, h = 0;
+        int mov = 0;
+        int x, y;
+        
+        Nodo(){
+            padre = null;
+            pos = null;
+            f = 0;
+            g = 0;
+            h = 0;
+            mov = 0;
+        }
+        
+        Nodo(Nodo p_Padre, int p_x, int p_y){
+            padre = p_Padre;
+            x = p_x;
+            y = p_y;
+            f = 0;
+            g = 0;
+            h = 0;
+        }
+        
+        Nodo(Nodo n){
+            this.padre = n.padre;
+            this.pos = n.pos;
+            this.f = n.f;
+            this.g = n.g;
+            this.h = n.h;
+            this.x = n.x;
+            this.y = n.y;
+            this.mov = n.mov;
+        }
+        
+        public void addVecinos(Laberinto lab){
+            
+            if(lab.obtenerPosicion(x+1, y) != 1){
+                this.vecinos.add(new Nodo(this, x+1, y));
+            }
+            if(lab.obtenerPosicion(x-1, y) != 1){
+                this.vecinos.add(new Nodo(this, x-1, y));
+            }
+            if(lab.obtenerPosicion(x, y+1) != 1){
+                this.vecinos.add(new Nodo(this, x, y+1));
+            }
+            if(lab.obtenerPosicion(x, y-1) != 1){
+                this.vecinos.add(new Nodo(this, x, y-1));
+            }
+      
+        }
+        
+        
+        public boolean equals(Nodo otro){
+            return (this.x == otro.x && this.y == otro.y);
+        }
+        
+        public String toString(){
+            String s = "[(" + this.x + "," + this.y + ") "+ this.f + "]";
+            return s;
+        }
+    };
+    
+
+    
+    private int moveTo(ArrayList<Nodo> path){
+        Nodo nodo = new Nodo(path.get(path.size() - 1));
+        Nodo moveNodo = new Nodo(path.get(path.size() - 2));
+        
+        int x = nodo.x - moveNodo.x;
+        int y = nodo.y - moveNodo.y;
+        
+        if(x == 0 && y == 1){ return Laberinto.ARRIBA;}
+        if(x == 1 && y == 0){ return Laberinto.IZQUIERDA;}
+        if(x == -1 && y == 0){ return Laberinto.DERECHA;}
+        if(x == 0 && y == -1){ return Laberinto.ABAJO;}
+        
+        
+        return 0;
+        
+        
+    }
+    
     //////////////////////////////
     // A ESTRELLA PARA FANTASMA //
     //////////////////////////////
     int AestrellaFantasma(Laberinto laberinto){
-        int result=0; //Devuelve el movimiento a realizar         
-        boolean encontrado=false;        
-                    
-        inic(laberinto.tam());        
+        int result= 0; //Devuelve el movimiento a realizar         
+        boolean encontrado=false;
         
-        //AQUI ES DONDE SE DEBE IMPLEMENTAR A*
+        inic(laberinto.tam());        
 
         
+        //Inicializo las dos listas que voy a utilizar.
+        ArrayList<Nodo> listaInterior = new ArrayList<>();
+        ArrayList<Nodo> listaFrontera = new ArrayList<>();
+
+        
+        //Guardo la posición de Inicio y el objetivo(Pacman)
+        int[] posFantasma = laberinto.obtenerPosicionFantasma(numeroFantasma);
+        int[] posPacman = laberinto.obtenerPosicionPacman();
+        
+        Nodo nodoInicial = new Nodo(null, posFantasma[0], posFantasma[1]);
+        Nodo nodoFinal = new Nodo(null,posPacman[0], posPacman[1]);
+        
+        //Inicializo las listas. ListaInterior vacia y listaFrontera con el nodoInicial.       
+		listaInterior.clear();           
+        listaFrontera.add(nodoInicial);
+
+        while(!listaFrontera.isEmpty()){
+            
+        
+            //Elijo el nodo con f mas prometedor de listaFrontera
+            int winner = 0;
+            for(int i = 0; i < listaFrontera.size(); i++){
+                if(listaFrontera.get(i).f < listaFrontera.get(winner).f){
+                    winner = i;
+                }
+            }
+            
+            Nodo nodo = listaFrontera.get(winner);
+            nodo.addVecinos(laberinto);
+            
+            //Si el hemos llegado al objetivo. Recreo el camino y lo guardo en 'path'
+            if(nodo.equals(nodoFinal)){
+                ArrayList<Nodo> path = new ArrayList<>();
+                path.add(nodo);
+                coste_total = nodo.f;
+                expandidos = 0;
+                while(nodo.padre != null){
+                    expandidos++;
+                    
+                    camino[nodo.y][nodo.x] = 'X';
+                    camino_expandido[nodo.y][nodo.x] = (int)nodo.f;
+                    path.add(nodo.padre);
+                    nodo = nodo.padre;
+                }
+                expandidos++;
+                camino[nodo.y][nodo.x] = 'X';
+                camino_expandido[nodo.y][nodo.x] = (int)nodo.f;
+                encontrado = true;
+                //Busco el movimiento que tiene que hacer.
+                result = moveTo(path);
+                break;
+            }
+            
+            listaFrontera.remove(nodo);
+            listaInterior.add(nodo);
+
+            //Analizo los nodos vecinos, por si son más prometedores.
+            for(int i = 0; i < nodo.vecinos.size(); i++){
+                Nodo vecino = nodo.vecinos.get(i);
+                
+                if(!listaInterior.contains(vecino)){
+                    double auxG = nodo.g + 1;
+                    if(listaFrontera.contains(vecino)){
+                        if(auxG < vecino.g){
+                            vecino.g = auxG;
+                        }
+                    }else{
+                        vecino.g = auxG;
+                        listaFrontera.add(vecino);
+                    }
+                }
+                
+                vecino.f = vecino.g + vecino.h;
+                vecino.padre = nodo;
+            }
+            
+        }
+   
         //Si ha encontrado la solución, es decir, el camino, muestra las matrices camino y camino_expandidos y el número de nodos expandidos
         if(encontrado){
             //Mostrar la solucion
