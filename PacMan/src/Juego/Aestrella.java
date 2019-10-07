@@ -133,8 +133,8 @@ public class Aestrella {
             padre = null;
             pos = null;
             f = 0;
-            g = 0;
             h = 0;
+            g = 0;
             mov = 0;
         }
         
@@ -143,8 +143,8 @@ public class Aestrella {
             x = p_x;
             y = p_y;
             f = 0;
-            g = 0;
             h = 0;
+            g = 0;
         }
         
         Nodo(Nodo n){
@@ -186,17 +186,13 @@ public class Aestrella {
         }
     };
     
-
-    
     private int moveTo(ArrayList<Nodo> path){
         Nodo nodo = new Nodo(path.get(path.size() - 1));
         Nodo moveNodo = new Nodo(path.get(path.size() - 2));
         
         int x = nodo.x - moveNodo.x;
         int y = nodo.y - moveNodo.y;
-        
-        System.out.println("x : " + x + ", y:" + y);
-        
+        //System.out.println("x : " + x + ", y:" + y);
         if(x == 0 && y == 1){ return Laberinto.ARRIBA;}
         if(x == 1 && y == 0){ return Laberinto.IZQUIERDA;}
         if(x == -1 && y == 0){ return Laberinto.DERECHA;}
@@ -205,14 +201,107 @@ public class Aestrella {
         return 0;
     }
     
-    private double heuristica(Nodo vecino, Nodo nodo){
-        return 0.0;
+    private int moveToPacman(ArrayList<Nodo> path ,Laberinto lab){
+        Nodo nodo = new Nodo(path.get(path.size() - 1));
+        Nodo moveNodo = new Nodo(path.get(path.size() - 2));
+        //Nodo nodo = new Nodo();
+        //Nodo moveNodo = new Nodo();
+        int x = nodo.x - moveNodo.x;
+        int y = nodo.y - moveNodo.y;
+        //System.out.println("x : " + x + ", y:" + y);
+        
+        //1 -> Arriba
+        //2 -> Abajo
+        //3 -> Derecha
+        //4 -> Izquierda
+        int move = 0; 
+        
+        if(x == 0 && y == 1){ 
+            //Arriba. 
+            move = 1;
+            if(lab.obtenerPosicion(x, y+1) != 1){ //Abajo
+                return Laberinto.ABAJO;
+            }
+            if(lab.obtenerPosicion(x+1, y) != 1){ //Derecha
+                return Laberinto.DERECHA;
+            }
+            if(lab.obtenerPosicion(x-1, y) != 1){ //Izquierda
+                return Laberinto.IZQUIERDA;
+            }
+
+            return Laberinto.ARRIBA;
+            
+            
+        }  
+        if(x == 1 && y == 0){
+            //Izquierda.
+            move = 4;
+            if(lab.obtenerPosicion(x+1, y) != 1){ //Derecha
+                return Laberinto.DERECHA;
+            }
+            
+            if(lab.obtenerPosicion(x, y-1) != 1){ //Arriba
+                return Laberinto.ARRIBA;
+            }
+
+            if(lab.obtenerPosicion(x, y+1) != 1){ //Abajo
+                return Laberinto.ABAJO;
+            }
+            return Laberinto.IZQUIERDA;      
+        } 
+        if(x == -1 && y == 0){ 
+            //Derecha.
+            move = 3;
+            if(lab.obtenerPosicion(x-1, y) != 1){ //Izquierda
+                return Laberinto.IZQUIERDA;
+            }
+            if(lab.obtenerPosicion(x, y-1) != 1){ //Arriba
+                return Laberinto.ARRIBA;
+            }
+
+            if(lab.obtenerPosicion(x, y+1) != 1){ //Abajo
+                return Laberinto.ABAJO;
+            }
+            return Laberinto.DERECHA;   
+        } 
+        if(x == 0 && y == -1){
+            //Abajo.
+            move = 2;
+            
+            if(lab.obtenerPosicion(x, y-1) != 1){ //Arriba
+                return Laberinto.ARRIBA;
+            }
+            if(lab.obtenerPosicion(x+1, y) != 1){ //Derecha
+                return Laberinto.DERECHA;
+            }
+            if(lab.obtenerPosicion(x-1, y) != 1){ //Izquierda
+                return Laberinto.IZQUIERDA;
+            }
+
+            return Laberinto.ABAJO;
+        } 
+        
+        
+        
+        
+        return 0;
     }
     
-    private boolean containsPosition(int x , int y, ArrayList<Nodo> listaFrontera){
-        
+    private double heuristicaEuclidea(Nodo inicio, Nodo destino){
+        //Euclidea
+        double x = (double)Math.pow(destino.x - inicio.x, 2);
+        double y = (double)Math.pow(destino.y - inicio.y, 2);
+        return (double)Math.sqrt(x + y);
+    }
+    
+    private double heuristicaManhattan(Nodo inicio, Nodo destino){
+        //Manhattan
+        return (double)(Math.abs(inicio.x - destino.x) + (Math.abs(inicio.y - destino.y)));
+    }
+    
+    private boolean containsPosition(int x , int y, ArrayList<Nodo> lista){
         //Buscamos si el la posición del nodo ya existe.
-        for(Nodo n: listaFrontera){
+        for(Nodo n: lista){
             if(n.x == x && n.y == y) return true;
         }
        return false; 
@@ -227,6 +316,8 @@ public class Aestrella {
         }
     }
     
+    int [] posFantasma;
+    int [] posPacman;
     //////////////////////////////
     // A ESTRELLA PARA FANTASMA //
     //////////////////////////////
@@ -236,15 +327,19 @@ public class Aestrella {
         
         inic(laberinto.tam());        
 
-        
         //Inicializo las dos listas que voy a utilizar.
         ArrayList<Nodo> listaInterior = new ArrayList<>();
         ArrayList<Nodo> listaFrontera = new ArrayList<>();
 
         
         //Guardo la posición de Inicio y el objetivo(Pacman)
-        int[] posFantasma = laberinto.obtenerPosicionFantasma(numeroFantasma);
-        int[] posPacman = laberinto.obtenerPosicionPacman();
+        posFantasma = laberinto.obtenerPosicionFantasma(numeroFantasma);
+        posPacman = laberinto.obtenerPosicionPacman();
+        
+        
+        System.out.println("fantasma: " + posFantasma[0] + ", " + posFantasma[1] );
+        System.out.println("pacman: " + posPacman[0] + ", " + posPacman[1] );
+        
         
         Nodo nodoInicial = new Nodo(null, posFantasma[0], posFantasma[1]);
         Nodo nodoFinal = new Nodo(null,posPacman[0], posPacman[1]);
@@ -255,16 +350,11 @@ public class Aestrella {
 
         while(!listaFrontera.isEmpty()){
             
-            
+            /*
             System.out.println("LISTA FRONTERA: ");
             for(Nodo n : listaFrontera){
                 System.out.println(n.toString());
-            }
-            
-            
-            
-            
-            
+            }*/
             //Elijo el nodo con f mas prometedor de listaFrontera
             int winner = 0;
             for(int i = 0; i < listaFrontera.size(); i++){
@@ -295,7 +385,7 @@ public class Aestrella {
                 camino_expandido[nodo.y][nodo.x] = (int)nodo.f;
                 encontrado = true;
                 //Busco el movimiento que tiene que hacer.
-                System.out.println("Result: " + result);
+                //System.out.println("Result: " + result);
                 result = moveTo(path);
                 break;
             }
@@ -304,33 +394,30 @@ public class Aestrella {
             listaFrontera.remove(nodo);
             
             //removeNodoFromFrontera(nodo.x, nodo.y, listaFrontera);
-
             //Analizo los nodos vecinos, por si son más prometedores.
-            for(int i = 0; i < nodo.vecinos.size(); i++){
+            for(int i = 0; i < nodo.vecinos.size(); i++){  
                 Nodo vecino = nodo.vecinos.get(i);
                 
-                if(!listaInterior.contains(vecino)){
-                    
-                    double auxG = nodo.g + heuristica(vecino, nodo);
-                    
+                if(!containsPosition(vecino.x, vecino.y, listaInterior)){
+                    double auxG = vecino.g + heuristicaEuclidea(vecino, nodo);
+                    //System.out.println("auxG: " + auxG + ", vecino.g: " + vecino.g + ", " + nodo.g);
                     if(!containsPosition(vecino.x, vecino.y, listaFrontera)){
-                        
-                        listaFrontera.add(vecino);
-                        
-                    }
-                    
-                    if(auxG >= vecino.g){
-                        vecino.g += auxG;
-                        vecino.h = heuristica(vecino, nodo);
-                        vecino.f = vecino.g + vecino.h;
-                        vecino.padre = nodo;
-                    }
 
-                }
-                
-            }
-            
-            
+                     vecino.g = nodo.g + 1;
+                     nodo.h = heuristicaEuclidea(nodo, nodoFinal);
+                     vecino.h = nodo.h;
+                     vecino.f = vecino.g + vecino.h;
+                     vecino.padre = nodo;
+                     listaFrontera.add(vecino);
+
+                    }else if(auxG <= nodo.g){
+                     vecino.padre = nodo;
+                     vecino.g += auxG;
+                     vecino.h = heuristicaEuclidea(vecino, nodoFinal);
+                     vecino.f = vecino.g + vecino.h;
+                    }                 
+                }      
+            }  
         }
    
         //Si ha encontrado la solución, es decir, el camino, muestra las matrices camino y camino_expandidos y el número de nodos expandidos
@@ -344,11 +431,7 @@ public class Aestrella {
             System.out.println("Camino explorado");
             mostrarCaminoExpandido(camino_expandido,laberinto.tam());            
         }
-        else{
-            System.out.println("NO ENCONTRADO!!");
-        }
         return result;    
-        
     }
 	     
  
@@ -360,6 +443,85 @@ public class Aestrella {
 	int result=0; //Devuelve el movimiento a realizar   
         
          //AQUI ES DONDE SE DEBE IMPLEMENTAR EL CODIGO PARA PACMAN
+             
+
+         //Inicializo las dos listas que voy a utilizar.
+        ArrayList<Nodo> listaInterior = new ArrayList<>();
+        ArrayList<Nodo> listaFrontera = new ArrayList<>();
+
+        
+        Nodo nodoFinal = new Nodo(null, posFantasma[0], posFantasma[1]);
+        Nodo nodoInicial = new Nodo(null,posPacman[0], posPacman[1]);
+        
+        //Inicializo las listas. ListaInterior vacia y listaFrontera con el nodoInicial.       
+        listaInterior.clear();           
+        listaFrontera.add(nodoInicial);
+
+        while(!listaFrontera.isEmpty()){
+            
+            /*
+            System.out.println("LISTA FRONTERA: ");
+            for(Nodo n : listaFrontera){
+                System.out.println(n.toString());
+            }*/
+            //Elijo el nodo con f mas prometedor de listaFrontera
+            int winner = 0;
+            for(int i = 0; i < listaFrontera.size(); i++){
+                if(listaFrontera.get(i).f < listaFrontera.get(winner).f){
+                    winner = i;
+                }
+            }
+            
+            Nodo nodo = listaFrontera.get(winner);
+            nodo.addVecinos(laberinto);
+            
+            //Si el hemos llegado al objetivo. Recreo el camino y lo guardo en 'path'
+            if(nodo.equals(nodoFinal)){
+                ArrayList<Nodo> path = new ArrayList<>();
+                path.add(nodo);
+
+                while(nodo.padre != null){
+ 
+                    path.add(nodo.padre);
+                    nodo = nodo.padre;
+                }
+
+                result = moveToPacman(path, laberinto);
+                break;
+            }
+            
+            listaInterior.add(nodo);
+            listaFrontera.remove(nodo);
+            
+            //removeNodoFromFrontera(nodo.x, nodo.y, listaFrontera);
+            //Analizo los nodos vecinos, por si son más prometedores.
+            for(int i = 0; i < nodo.vecinos.size(); i++){  
+                Nodo vecino = nodo.vecinos.get(i);
+                
+                if(!containsPosition(vecino.x, vecino.y, listaInterior)){
+                    double auxG = vecino.g + heuristicaEuclidea(vecino, nodo);
+                    //System.out.println("auxG: " + auxG + ", vecino.g: " + vecino.g + ", " + nodo.g);
+                    if(!containsPosition(vecino.x, vecino.y, listaFrontera)){
+
+                     vecino.g = nodo.g + 1;
+                     nodo.h = heuristicaEuclidea(nodo, nodoFinal);
+                     vecino.h = nodo.h;
+                     vecino.f = vecino.g + vecino.h;
+                     vecino.padre = nodo;
+                     listaFrontera.add(vecino);
+
+                    }else if(auxG <= nodo.g){
+                     vecino.padre = nodo;
+                     vecino.g += auxG;
+                     vecino.h = heuristicaEuclidea(vecino, nodoFinal);
+                     vecino.f = vecino.g + vecino.h;
+                    }                 
+                }      
+            }  
+        }
+   
+         
+         
         
         return result;
     }
@@ -388,3 +550,19 @@ public class Aestrella {
     } 
 }
     
+           
+                    /*double auxG = nodo.g + heuristica(vecino, nodo);
+                    
+                    if(!containsPosition(vecino.x, vecino.y, listaFrontera)){
+                        
+                        listaFrontera.add(vecino);
+                        
+                    }
+                    
+                    if(auxG >= vecino.g){
+                        vecino.g += auxG;
+                        vecino.h = heuristica(vecino, nodo);
+                        vecino.f = vecino.g + vecino.h;
+                        vecino.padre = nodo;
+                    }*/
+
