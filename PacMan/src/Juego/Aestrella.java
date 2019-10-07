@@ -233,7 +233,6 @@ public class Aestrella {
 
         while(!listaFrontera.isEmpty()){
             
-        
             //Elijo el nodo con f mas prometedor de listaFrontera
             int winner = 0;
             for(int i = 0; i < listaFrontera.size(); i++){
