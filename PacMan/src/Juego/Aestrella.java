@@ -124,7 +124,8 @@ public class Aestrella {
         Nodo padre;
         ArrayList<Nodo> vecinos = new ArrayList<>();
         Position pos;
-        double f, g, h = 0;
+        double f, h = 0;
+        double g = 0;
         int mov = 0;
         int x, y;
         
@@ -194,22 +195,43 @@ public class Aestrella {
         int x = nodo.x - moveNodo.x;
         int y = nodo.y - moveNodo.y;
         
+        System.out.println("x : " + x + ", y:" + y);
+        
         if(x == 0 && y == 1){ return Laberinto.ARRIBA;}
         if(x == 1 && y == 0){ return Laberinto.IZQUIERDA;}
         if(x == -1 && y == 0){ return Laberinto.DERECHA;}
         if(x == 0 && y == -1){ return Laberinto.ABAJO;}
         
-        
         return 0;
+    }
+    
+    private double heuristica(Nodo vecino, Nodo nodo){
+        return 0.0;
+    }
+    
+    private boolean containsPosition(int x , int y, ArrayList<Nodo> listaFrontera){
         
-        
+        //Buscamos si el la posición del nodo ya existe.
+        for(Nodo n: listaFrontera){
+            if(n.x == x && n.y == y) return true;
+        }
+       return false; 
+    }
+    
+    
+    private void removeNodoFromFrontera(int x, int y, ArrayList<Nodo> listaFrontera){
+        for(Nodo n: listaFrontera){
+            if(n.x == x && n.y == y){
+                listaFrontera.remove(n);
+            } 
+        }
     }
     
     //////////////////////////////
     // A ESTRELLA PARA FANTASMA //
     //////////////////////////////
     int AestrellaFantasma(Laberinto laberinto){
-        int result= 0; //Devuelve el movimiento a realizar         
+        int result= -1; //Devuelve el movimiento a realizar         
         boolean encontrado=false;
         
         inic(laberinto.tam());        
@@ -228,10 +250,20 @@ public class Aestrella {
         Nodo nodoFinal = new Nodo(null,posPacman[0], posPacman[1]);
         
         //Inicializo las listas. ListaInterior vacia y listaFrontera con el nodoInicial.       
-		listaInterior.clear();           
+        listaInterior.clear();           
         listaFrontera.add(nodoInicial);
 
         while(!listaFrontera.isEmpty()){
+            
+            
+            System.out.println("LISTA FRONTERA: ");
+            for(Nodo n : listaFrontera){
+                System.out.println(n.toString());
+            }
+            
+            
+            
+            
             
             //Elijo el nodo con f mas prometedor de listaFrontera
             int winner = 0;
@@ -263,32 +295,41 @@ public class Aestrella {
                 camino_expandido[nodo.y][nodo.x] = (int)nodo.f;
                 encontrado = true;
                 //Busco el movimiento que tiene que hacer.
+                System.out.println("Result: " + result);
                 result = moveTo(path);
                 break;
             }
             
-            listaFrontera.remove(nodo);
             listaInterior.add(nodo);
+            listaFrontera.remove(nodo);
+            
+            //removeNodoFromFrontera(nodo.x, nodo.y, listaFrontera);
 
             //Analizo los nodos vecinos, por si son más prometedores.
             for(int i = 0; i < nodo.vecinos.size(); i++){
                 Nodo vecino = nodo.vecinos.get(i);
                 
                 if(!listaInterior.contains(vecino)){
-                    double auxG = nodo.g + 1;
-                    if(listaFrontera.contains(vecino)){
-                        if(auxG < vecino.g){
-                            vecino.g = auxG;
-                        }
-                    }else{
-                        vecino.g = auxG;
+                    
+                    double auxG = nodo.g + heuristica(vecino, nodo);
+                    
+                    if(!containsPosition(vecino.x, vecino.y, listaFrontera)){
+                        
                         listaFrontera.add(vecino);
+                        
                     }
+                    
+                    if(auxG >= vecino.g){
+                        vecino.g += auxG;
+                        vecino.h = heuristica(vecino, nodo);
+                        vecino.f = vecino.g + vecino.h;
+                        vecino.padre = nodo;
+                    }
+
                 }
                 
-                vecino.f = vecino.g + vecino.h;
-                vecino.padre = nodo;
             }
+            
             
         }
    
@@ -303,11 +344,15 @@ public class Aestrella {
             System.out.println("Camino explorado");
             mostrarCaminoExpandido(camino_expandido,laberinto.tam());            
         }
-
+        else{
+            System.out.println("NO ENCONTRADO!!");
+        }
         return result;    
         
     }
 	     
+ 
+    
     //////////////////////////////
     // A ESTRELLA PARA PACMAN //
     //////////////////////////////
