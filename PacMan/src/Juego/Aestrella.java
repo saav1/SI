@@ -219,8 +219,8 @@ public class Aestrella {
 
         //Nodo nodo = new Nodo();
         //Nodo moveNodo = new Nodo();
-        int x = moveNodo.x - nodo.x;
-        int y = moveNodo.y - nodo.y;
+        int x = nodo.x - moveNodo.x;
+        int y = nodo.y - moveNodo.y;
         
         System.out.println("MOVEEER: >>> x : " + x + ", y:" + y);
         
@@ -251,28 +251,10 @@ public class Aestrella {
         }  
         if(x == 1 && y == 0){
      
-            //Derecha.
+            //Izquierda.
             move = 3;
             System.out.println("Move derecha");
-
-            if(lab.obtenerPosicion(nodo.x-1, nodo.y) != 1){ //Izquierda
-                return Laberinto.IZQUIERDA;
-            }
-            if(lab.obtenerPosicion(nodo.x, nodo.y-1) != 1){ //Arriba
-                return Laberinto.ARRIBA;
-            }
-
-            if(lab.obtenerPosicion(nodo.x, nodo.y+1) != 1){ //Abajo
-                return Laberinto.ABAJO;
-            }
             
-            return Laberinto.DERECHA;   
-        } 
-        if(x == -1 && y == 0){ 
-            //Izquierda.
-            move = 4;
-            System.out.println("Move izquierda");
-
             if(lab.obtenerPosicion(nodo.x+1, nodo.y) != 1){ //Derecha
                 return Laberinto.DERECHA;
             }
@@ -286,6 +268,27 @@ public class Aestrella {
             }
             
             return Laberinto.IZQUIERDA; 
+            
+
+        } 
+        if(x == -1 && y == 0){ 
+            //Derecha.
+            
+            move = 4;
+            System.out.println("Move izquierda");
+
+            if(lab.obtenerPosicion(nodo.x-1, nodo.y) != 1){ //Izquierda
+                return Laberinto.IZQUIERDA;
+            }
+            if(lab.obtenerPosicion(nodo.x, nodo.y-1) != 1){ //Arriba
+                return Laberinto.ARRIBA;
+            }
+
+            if(lab.obtenerPosicion(nodo.x, nodo.y+1) != 1){ //Abajo
+                return Laberinto.ABAJO;
+            }
+            
+            return Laberinto.DERECHA;   
         } 
         if(x == 0 && y == -1){
             //Abajo.
