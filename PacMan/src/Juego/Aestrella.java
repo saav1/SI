@@ -292,6 +292,7 @@ public class Aestrella {
         double x = (double)Math.pow(destino.x - inicio.x, 2);
         double y = (double)Math.pow(destino.y - inicio.y, 2);
         return (double)Math.sqrt(x + y);
+        //return 0.0;
     }
     
     private double heuristicaManhattan(Nodo inicio, Nodo destino){
@@ -316,8 +317,7 @@ public class Aestrella {
         }
     }
     
-    int [] posFantasma;
-    int [] posPacman;
+
     //////////////////////////////
     // A ESTRELLA PARA FANTASMA //
     //////////////////////////////
@@ -333,8 +333,8 @@ public class Aestrella {
 
         
         //Guardo la posición de Inicio y el objetivo(Pacman)
-        posFantasma = laberinto.obtenerPosicionFantasma(numeroFantasma);
-        posPacman = laberinto.obtenerPosicionPacman();
+        int[] posFantasma = laberinto.obtenerPosicionFantasma(numeroFantasma);
+        int[] posPacman = laberinto.obtenerPosicionPacman();
         
         
         System.out.println("fantasma: " + posFantasma[0] + ", " + posFantasma[1] );
@@ -404,15 +404,14 @@ public class Aestrella {
                     if(!containsPosition(vecino.x, vecino.y, listaFrontera)){
 
                      vecino.g = nodo.g + 1;
-                     nodo.h = heuristicaEuclidea(nodo, nodoFinal);
-                     vecino.h = nodo.h;
+                     vecino.h = heuristicaEuclidea(nodo, nodoFinal);
                      vecino.f = vecino.g + vecino.h;
                      vecino.padre = nodo;
                      listaFrontera.add(vecino);
 
                     }else if(auxG <= nodo.g){
                      vecino.padre = nodo;
-                     vecino.g += auxG;
+                     vecino.g = auxG;
                      vecino.h = heuristicaEuclidea(vecino, nodoFinal);
                      vecino.f = vecino.g + vecino.h;
                     }                 
@@ -449,9 +448,18 @@ public class Aestrella {
         ArrayList<Nodo> listaInterior = new ArrayList<>();
         ArrayList<Nodo> listaFrontera = new ArrayList<>();
 
+        //Guardo la posición de Inicio y el objetivo(Pacman)
+        int[] posFantasma = laberinto.obtenerPosicionFantasma(1);
+        int[] posPacman = laberinto.obtenerPosicionPacman();
         
+
         Nodo nodoFinal = new Nodo(null, posFantasma[0], posFantasma[1]);
         Nodo nodoInicial = new Nodo(null,posPacman[0], posPacman[1]);
+        
+          
+        System.out.println("NodoFinal: " + nodoFinal.x + ",  " + nodoFinal.y);
+        System.out.println("NodoInicial: " + nodoInicial.x + ",  " + nodoInicial.y); 
+        
         
         //Inicializo las listas. ListaInterior vacia y listaFrontera con el nodoInicial.       
         listaInterior.clear();           
