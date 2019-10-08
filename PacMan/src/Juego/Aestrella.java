@@ -203,37 +203,16 @@ public class Aestrella {
     
     private int moveToPacman(ArrayList<Nodo> path ,Laberinto lab){
         
-        Nodo nodo;
-        Nodo moveNodo;
-        
-        System.out.println("PAHT SIZE: " + path.size());
-        System.out.println("PATH: ");
-        for(Nodo n:path){
-            System.out.println(n.toString());
-        }
+        Nodo nodo = new Nodo(path.get(path.size() - 1));
+        Nodo moveNodo = new Nodo(path.get(path.size() - 2));
         
 
-            nodo = new Nodo(path.get(path.size() - 1));
-            moveNodo = new Nodo(path.get(path.size() - 2));
-        
-
-        //Nodo nodo = new Nodo();
-        //Nodo moveNodo = new Nodo();
         int x = nodo.x - moveNodo.x;
         int y = nodo.y - moveNodo.y;
-        
-        System.out.println("MOVEEER: >>> x : " + x + ", y:" + y);
-        
-        //1 -> Arriba
-        //2 -> Abajo
-        //3 -> Derecha
-        //4 -> Izquierda
-        int move = 0;
+               
         
         if(x == 0 && y == 1){ 
             //Arriba. 
-            move = 1;
-            System.out.println("Move arriba");
             
             if(lab.obtenerPosicion(nodo.x, nodo.y+1) != 1){ //Abajo
                 return Laberinto.ABAJO;
@@ -245,15 +224,11 @@ public class Aestrella {
                 return Laberinto.IZQUIERDA;
             }
             
-            return Laberinto.ARRIBA; 
-            
-            
+            return Laberinto.ARRIBA;         
         }  
+        
         if(x == 1 && y == 0){
-     
             //Izquierda.
-            move = 3;
-            System.out.println("Move derecha");
             
             if(lab.obtenerPosicion(nodo.x+1, nodo.y) != 1){ //Derecha
                 return Laberinto.DERECHA;
@@ -268,14 +243,10 @@ public class Aestrella {
             }
             
             return Laberinto.IZQUIERDA; 
-            
-
         } 
+        
         if(x == -1 && y == 0){ 
             //Derecha.
-            
-            move = 4;
-            System.out.println("Move izquierda");
 
             if(lab.obtenerPosicion(nodo.x-1, nodo.y) != 1){ //Izquierda
                 return Laberinto.IZQUIERDA;
@@ -290,10 +261,9 @@ public class Aestrella {
             
             return Laberinto.DERECHA;   
         } 
+        
         if(x == 0 && y == -1){
             //Abajo.
-            move = 2;
-            System.out.println("Move abajo");
             
             if(lab.obtenerPosicion(nodo.x, nodo.y-1) != 1){ //Arriba
                 return Laberinto.ARRIBA;
@@ -308,9 +278,6 @@ public class Aestrella {
             return Laberinto.ABAJO;
         } 
         
-        
-        
-        
         return 0;
     }
     
@@ -319,7 +286,6 @@ public class Aestrella {
         double x = (double)Math.pow(destino.x - inicio.x, 2);
         double y = (double)Math.pow(destino.y - inicio.y, 2);
         return (double)Math.sqrt(x + y);
-        //return 0.0;
     }
     
     private double heuristicaManhattan(Nodo inicio, Nodo destino){
@@ -470,13 +436,11 @@ public class Aestrella {
         //Inicializo las dos listas que voy a utilizar.
         ArrayList<Nodo> listaInterior = new ArrayList<>();
         ArrayList<Nodo> listaFrontera = new ArrayList<>();
-
         
         //Guardo la posición de Inicio y el objetivo(Pacman)
         int[] posFantasma = laberinto.obtenerPosicionFantasma(numeroFantasma);
         int[] posPacman = laberinto.obtenerPosicionPacman();
         
-
         
         Nodo nodoInicial = new Nodo(null, posPacman[0], posPacman[1]);
         Nodo nodoFinal = new Nodo(null,posFantasma[0], posFantasma[1]);
@@ -548,7 +512,6 @@ public class Aestrella {
                 }      
             }  
         }
-        
         return result;
     }
     
