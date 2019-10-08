@@ -7,7 +7,7 @@ import java.util.*;
 public class Aestrella {
 	
     public boolean pacman;
-    public int numeroFantasma = 0;  
+    public int numeroFantasma = 1;  
     
     //Camino
     char camino[][];    
@@ -202,82 +202,106 @@ public class Aestrella {
     }
     
     private int moveToPacman(ArrayList<Nodo> path ,Laberinto lab){
-        Nodo nodo = new Nodo(path.get(path.size() - 1));
-        Nodo moveNodo = new Nodo(path.get(path.size() - 2));
+        
+        Nodo nodo;
+        Nodo moveNodo;
+        
+        System.out.println("PAHT SIZE: " + path.size());
+        System.out.println("PATH: ");
+        for(Nodo n:path){
+            System.out.println(n.toString());
+        }
+        
+
+            nodo = new Nodo(path.get(path.size() - 1));
+            moveNodo = new Nodo(path.get(path.size() - 2));
+        
+
         //Nodo nodo = new Nodo();
         //Nodo moveNodo = new Nodo();
-        int x = nodo.x - moveNodo.x;
-        int y = nodo.y - moveNodo.y;
-        //System.out.println("x : " + x + ", y:" + y);
+        int x = moveNodo.x - nodo.x;
+        int y = moveNodo.y - nodo.y;
+        
+        System.out.println("MOVEEER: >>> x : " + x + ", y:" + y);
         
         //1 -> Arriba
         //2 -> Abajo
         //3 -> Derecha
         //4 -> Izquierda
-        int move = 0; 
+        int move = 0;
         
         if(x == 0 && y == 1){ 
             //Arriba. 
             move = 1;
-            if(lab.obtenerPosicion(x, y+1) != 1){ //Abajo
+            System.out.println("Move arriba");
+            
+            if(lab.obtenerPosicion(nodo.x, nodo.y+1) != 1){ //Abajo
                 return Laberinto.ABAJO;
             }
-            if(lab.obtenerPosicion(x+1, y) != 1){ //Derecha
+            if(lab.obtenerPosicion(nodo.x+1, nodo.y) != 1){ //Derecha
                 return Laberinto.DERECHA;
             }
-            if(lab.obtenerPosicion(x-1, y) != 1){ //Izquierda
+            if(lab.obtenerPosicion(nodo.x-1, nodo.y) != 1){ //Izquierda
                 return Laberinto.IZQUIERDA;
             }
-
-            return Laberinto.ARRIBA;
+            
+            return Laberinto.ARRIBA; 
             
             
         }  
         if(x == 1 && y == 0){
+     
+            //Derecha.
+            move = 3;
+            System.out.println("Move derecha");
+
+            if(lab.obtenerPosicion(nodo.x-1, nodo.y) != 1){ //Izquierda
+                return Laberinto.IZQUIERDA;
+            }
+            if(lab.obtenerPosicion(nodo.x, nodo.y-1) != 1){ //Arriba
+                return Laberinto.ARRIBA;
+            }
+
+            if(lab.obtenerPosicion(nodo.x, nodo.y+1) != 1){ //Abajo
+                return Laberinto.ABAJO;
+            }
+            
+            return Laberinto.DERECHA;   
+        } 
+        if(x == -1 && y == 0){ 
             //Izquierda.
             move = 4;
-            if(lab.obtenerPosicion(x+1, y) != 1){ //Derecha
+            System.out.println("Move izquierda");
+
+            if(lab.obtenerPosicion(nodo.x+1, nodo.y) != 1){ //Derecha
                 return Laberinto.DERECHA;
             }
             
-            if(lab.obtenerPosicion(x, y-1) != 1){ //Arriba
+            if(lab.obtenerPosicion(nodo.x, nodo.y-1) != 1){ //Arriba
                 return Laberinto.ARRIBA;
             }
 
-            if(lab.obtenerPosicion(x, y+1) != 1){ //Abajo
+            if(lab.obtenerPosicion(nodo.x, nodo.y+1) != 1){ //Abajo
                 return Laberinto.ABAJO;
             }
-            return Laberinto.IZQUIERDA;      
-        } 
-        if(x == -1 && y == 0){ 
-            //Derecha.
-            move = 3;
-            if(lab.obtenerPosicion(x-1, y) != 1){ //Izquierda
-                return Laberinto.IZQUIERDA;
-            }
-            if(lab.obtenerPosicion(x, y-1) != 1){ //Arriba
-                return Laberinto.ARRIBA;
-            }
-
-            if(lab.obtenerPosicion(x, y+1) != 1){ //Abajo
-                return Laberinto.ABAJO;
-            }
-            return Laberinto.DERECHA;   
+            
+            return Laberinto.IZQUIERDA; 
         } 
         if(x == 0 && y == -1){
             //Abajo.
             move = 2;
+            System.out.println("Move abajo");
             
-            if(lab.obtenerPosicion(x, y-1) != 1){ //Arriba
+            if(lab.obtenerPosicion(nodo.x, nodo.y-1) != 1){ //Arriba
                 return Laberinto.ARRIBA;
             }
-            if(lab.obtenerPosicion(x+1, y) != 1){ //Derecha
+            if(lab.obtenerPosicion(nodo.x+1, nodo.y) != 1){ //Derecha
                 return Laberinto.DERECHA;
             }
-            if(lab.obtenerPosicion(x-1, y) != 1){ //Izquierda
+            if(lab.obtenerPosicion(nodo.x-1, nodo.y) != 1){ //Izquierda
                 return Laberinto.IZQUIERDA;
-            }
-
+            }   
+            
             return Laberinto.ABAJO;
         } 
         
@@ -335,12 +359,7 @@ public class Aestrella {
         //Guardo la posición de Inicio y el objetivo(Pacman)
         int[] posFantasma = laberinto.obtenerPosicionFantasma(numeroFantasma);
         int[] posPacman = laberinto.obtenerPosicionPacman();
-        
-        
-        System.out.println("fantasma: " + posFantasma[0] + ", " + posFantasma[1] );
-        System.out.println("pacman: " + posPacman[0] + ", " + posPacman[1] );
-        
-        
+       
         Nodo nodoInicial = new Nodo(null, posFantasma[0], posFantasma[1]);
         Nodo nodoFinal = new Nodo(null,posPacman[0], posPacman[1]);
         
@@ -355,6 +374,7 @@ public class Aestrella {
             for(Nodo n : listaFrontera){
                 System.out.println(n.toString());
             }*/
+            
             //Elijo el nodo con f mas prometedor de listaFrontera
             int winner = 0;
             for(int i = 0; i < listaFrontera.size(); i++){
@@ -391,9 +411,10 @@ public class Aestrella {
             }
             
             listaInterior.add(nodo);
+            //removeNodoFromFrontera(nodo.x, nodo.y, listaFrontera);
             listaFrontera.remove(nodo);
             
-            //removeNodoFromFrontera(nodo.x, nodo.y, listaFrontera);
+            
             //Analizo los nodos vecinos, por si son más prometedores.
             for(int i = 0; i < nodo.vecinos.size(); i++){  
                 Nodo vecino = nodo.vecinos.get(i);
@@ -442,23 +463,24 @@ public class Aestrella {
 	int result=0; //Devuelve el movimiento a realizar   
         
          //AQUI ES DONDE SE DEBE IMPLEMENTAR EL CODIGO PARA PACMAN
-             
-
-         //Inicializo las dos listas que voy a utilizar.
+ 
+        //Inicializo las dos listas que voy a utilizar.
         ArrayList<Nodo> listaInterior = new ArrayList<>();
         ArrayList<Nodo> listaFrontera = new ArrayList<>();
 
+        
         //Guardo la posición de Inicio y el objetivo(Pacman)
-        int[] posFantasma = laberinto.obtenerPosicionFantasma(1);
+        int[] posFantasma = laberinto.obtenerPosicionFantasma(numeroFantasma);
         int[] posPacman = laberinto.obtenerPosicionPacman();
         
 
-        Nodo nodoFinal = new Nodo(null, posFantasma[0], posFantasma[1]);
-        Nodo nodoInicial = new Nodo(null,posPacman[0], posPacman[1]);
         
-          
-        System.out.println("NodoFinal: " + nodoFinal.x + ",  " + nodoFinal.y);
-        System.out.println("NodoInicial: " + nodoInicial.x + ",  " + nodoInicial.y); 
+        Nodo nodoInicial = new Nodo(null, posPacman[0], posPacman[1]);
+        Nodo nodoFinal = new Nodo(null,posFantasma[0], posFantasma[1]);
+        
+        System.out.println("Nodo Inicio: " + nodoInicial.x + ", " + nodoInicial.y);
+        System.out.println("Nodo Final: " + nodoFinal.x + ", " + nodoFinal.y);
+
         
         
         //Inicializo las listas. ListaInterior vacia y listaFrontera con el nodoInicial.       
@@ -466,12 +488,6 @@ public class Aestrella {
         listaFrontera.add(nodoInicial);
 
         while(!listaFrontera.isEmpty()){
-            
-            /*
-            System.out.println("LISTA FRONTERA: ");
-            for(Nodo n : listaFrontera){
-                System.out.println(n.toString());
-            }*/
             //Elijo el nodo con f mas prometedor de listaFrontera
             int winner = 0;
             for(int i = 0; i < listaFrontera.size(); i++){
@@ -489,19 +505,22 @@ public class Aestrella {
                 path.add(nodo);
 
                 while(nodo.padre != null){
- 
+
                     path.add(nodo.padre);
                     nodo = nodo.padre;
                 }
 
-                result = moveToPacman(path, laberinto);
+                //Busco el movimiento que tiene que hacer.
+                //System.out.println("Result: " + result);
+                result = moveToPacman(path , laberinto);
                 break;
             }
             
             listaInterior.add(nodo);
+            //removeNodoFromFrontera(nodo.x, nodo.y, listaFrontera);
             listaFrontera.remove(nodo);
             
-            //removeNodoFromFrontera(nodo.x, nodo.y, listaFrontera);
+            
             //Analizo los nodos vecinos, por si son más prometedores.
             for(int i = 0; i < nodo.vecinos.size(); i++){  
                 Nodo vecino = nodo.vecinos.get(i);
@@ -512,24 +531,20 @@ public class Aestrella {
                     if(!containsPosition(vecino.x, vecino.y, listaFrontera)){
 
                      vecino.g = nodo.g + 1;
-                     nodo.h = heuristicaEuclidea(nodo, nodoFinal);
-                     vecino.h = nodo.h;
+                     vecino.h = heuristicaEuclidea(nodo, nodoFinal);
                      vecino.f = vecino.g + vecino.h;
                      vecino.padre = nodo;
                      listaFrontera.add(vecino);
 
                     }else if(auxG <= nodo.g){
                      vecino.padre = nodo;
-                     vecino.g += auxG;
+                     vecino.g = auxG;
                      vecino.h = heuristicaEuclidea(vecino, nodoFinal);
                      vecino.f = vecino.g + vecino.h;
                     }                 
                 }      
             }  
         }
-   
-         
-         
         
         return result;
     }
@@ -558,19 +573,3 @@ public class Aestrella {
     } 
 }
     
-           
-                    /*double auxG = nodo.g + heuristica(vecino, nodo);
-                    
-                    if(!containsPosition(vecino.x, vecino.y, listaFrontera)){
-                        
-                        listaFrontera.add(vecino);
-                        
-                    }
-                    
-                    if(auxG >= vecino.g){
-                        vecino.g += auxG;
-                        vecino.h = heuristica(vecino, nodo);
-                        vecino.f = vecino.g + vecino.h;
-                        vecino.padre = nodo;
-                    }*/
-
