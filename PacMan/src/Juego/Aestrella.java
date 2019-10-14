@@ -175,6 +175,9 @@ public class Aestrella {
       
         }
         
+        public double calcularDistancia(Nodo nodoFinal){
+            return heuristicaEuclidea(this, nodoFinal);
+        }
         
         public boolean equals(Nodo otro){
             return (this.x == otro.x && this.y == otro.y);
@@ -205,7 +208,7 @@ public class Aestrella {
         
         Nodo nodo = new Nodo(path.get(path.size() - 1));
         Nodo moveNodo = new Nodo(path.get(path.size() - 2));
-        
+        System.out.println("....................................................Mover");
 
         int x = nodo.x - moveNodo.x;
         int y = nodo.y - moveNodo.y;
@@ -229,7 +232,6 @@ public class Aestrella {
         
         if(x == 1 && y == 0){
             //Izquierda.
-            
             if(lab.obtenerPosicion(nodo.x+1, nodo.y) != 1){ //Derecha
                 return Laberinto.DERECHA;
             }
@@ -264,7 +266,6 @@ public class Aestrella {
         
         if(x == 0 && y == -1){
             //Abajo.
-            
             if(lab.obtenerPosicion(nodo.x, nodo.y-1) != 1){ //Arriba
                 return Laberinto.ARRIBA;
             }
@@ -278,7 +279,8 @@ public class Aestrella {
             return Laberinto.ABAJO;
         } 
         
-        return 0;
+        
+        return Laberinto.ARRIBA;
     }
     
     private double heuristicaEuclidea(Nodo inicio, Nodo destino){
@@ -335,15 +337,11 @@ public class Aestrella {
         //Inicializo las listas. ListaInterior vacia y listaFrontera con el nodoInicial.       
         listaInterior.clear();           
         listaFrontera.add(nodoInicial);
-
+        
+        int cont = 0;
+        expandidos = 0;
         while(!listaFrontera.isEmpty()){
-            
-            /*
-            System.out.println("LISTA FRONTERA: ");
-            for(Nodo n : listaFrontera){
-                System.out.println(n.toString());
-            }*/
-            
+                        
             //Elijo el nodo con f mas prometedor de listaFrontera
             int winner = 0;
             for(int i = 0; i < listaFrontera.size(); i++){
@@ -360,18 +358,13 @@ public class Aestrella {
                 ArrayList<Nodo> path = new ArrayList<>();
                 path.add(nodo);
                 coste_total = nodo.f;
-                expandidos = 0;
                 while(nodo.padre != null){
-                    expandidos++;
                     
                     camino[nodo.y][nodo.x] = 'X';
-                    camino_expandido[nodo.y][nodo.x] = (int)nodo.f;
                     path.add(nodo.padre);
                     nodo = nodo.padre;
                 }
-                expandidos++;
                 camino[nodo.y][nodo.x] = 'X';
-                camino_expandido[nodo.y][nodo.x] = (int)nodo.f;
                 encontrado = true;
                 //Busco el movimiento que tiene que hacer.
                 //System.out.println("Result: " + result);
@@ -379,6 +372,8 @@ public class Aestrella {
                 break;
             }
             
+            camino_expandido[nodo.y][nodo.x] = cont++;
+            expandidos++;
             listaInterior.add(nodo);
             //removeNodoFromFrontera(nodo.x, nodo.y, listaFrontera);
             listaFrontera.remove(nodo);
@@ -424,7 +419,7 @@ public class Aestrella {
     }
 	     
  
-    
+
     //////////////////////////////
     // A ESTRELLA PARA PACMAN //
     //////////////////////////////
@@ -438,17 +433,19 @@ public class Aestrella {
         ArrayList<Nodo> listaFrontera = new ArrayList<>();
         
         //Guardo la posición de Inicio y el objetivo(Pacman)
-        int[] posFantasma = laberinto.obtenerPosicionFantasma(numeroFantasma);
         int[] posPacman = laberinto.obtenerPosicionPacman();
-        
-        
         Nodo nodoInicial = new Nodo(null, posPacman[0], posPacman[1]);
-        Nodo nodoFinal = new Nodo(null,posFantasma[0], posFantasma[1]);
         
-        System.out.println("Nodo Inicio: " + nodoInicial.x + ", " + nodoInicial.y);
-        System.out.println("Nodo Final: " + nodoFinal.x + ", " + nodoFinal.y);
-
-        
+        //Calculo que fantasma está más cerca. Para alejarme de él.        
+        Nodo nodoFinal = null;
+        double distMin = 1000;
+        for(int i = 1 ; i <= laberinto.numFantasmas ; i++){
+            int[] posFantasma = laberinto.obtenerPosicionFantasma(i);
+            if( nodoInicial.calcularDistancia(new Nodo(null, posFantasma[0], posFantasma[1])) < distMin){
+                nodoFinal = new Nodo(null, posFantasma[0], posFantasma[1]);
+                distMin = nodoInicial.calcularDistancia(new Nodo(null, posFantasma[0], posFantasma[1]));
+            }
+        }
         
         //Inicializo las listas. ListaInterior vacia y listaFrontera con el nodoInicial.       
         listaInterior.clear();           
@@ -486,8 +483,7 @@ public class Aestrella {
             listaInterior.add(nodo);
             //removeNodoFromFrontera(nodo.x, nodo.y, listaFrontera);
             listaFrontera.remove(nodo);
-            
-            
+             
             //Analizo los nodos vecinos, por si son más prometedores.
             for(int i = 0; i < nodo.vecinos.size(); i++){  
                 Nodo vecino = nodo.vecinos.get(i);
