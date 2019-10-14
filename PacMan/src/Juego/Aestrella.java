@@ -498,7 +498,7 @@ public class Aestrella {
                     if(!containsPosition(vecino.x, vecino.y, listaFrontera)){
 
                      vecino.g = nodo.g + 1;
-                     vecino.h = heuristicaEuclidea(nodo, nodoFinal);
+                     vecino.h = heuristicaManhattan(nodo, nodoFinal);
                      vecino.f = vecino.g + vecino.h;
                      vecino.padre = nodo;
                      listaFrontera.add(vecino);
@@ -506,7 +506,7 @@ public class Aestrella {
                     }else if(auxG <= nodo.g){
                      vecino.padre = nodo;
                      vecino.g = auxG;
-                     vecino.h = heuristicaEuclidea(vecino, nodoFinal);
+                     vecino.h = heuristicaManhattan(vecino, nodoFinal);
                      vecino.f = vecino.g + vecino.h;
                     }                 
                 }      
