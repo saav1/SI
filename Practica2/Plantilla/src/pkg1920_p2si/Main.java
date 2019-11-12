@@ -30,7 +30,7 @@ public class Main {
         ArrayList d0imgs = ml.getImageDatabaseForDigit(1);
         
         //Y cojo la tercera imagen del dígito 1
-        Imagen img = (Imagen) d0imgs.get(2);
+        Imagen img = (Imagen) d0imgs.get(50);
         
         //La invierto para ilustrar como acceder a los pixels
         byte imageData[] = img.getImageData();

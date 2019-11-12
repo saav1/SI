@@ -1,3 +1,34 @@
+
+Adaboost.
+    2.1 Clasificadores débiles.
+
+    Teniendo en cuenta que cada imagén se especifica por un vector característico del mismo 
+    tamaño que la imagen, 28 * 28 = 784. Podemos establecer que la imágenes, representadas
+    por su vector característico, se van a encontrar distribuidas en un espacio de 784 
+    dimensiones. El objetivo final de la práctica es encontrar un clasificador robusto que 
+    divida este espacio de manera que se distinga la parte del espacio en la que está un 
+    dígito concreto.
+
+    Para obtener este clasificador robusto, vamos a comenzar por crear clasificadores no tan 
+    robustos, pero que al menos nos sirvan para realizar una clasificación. Estos 
+    clasificdores se conocen como clasificadores débiles.
+
+    La forma más sencilla de clasificar objetos distribuidos en un espacio es dividir el 
+    espacio en dos partes y especificar que los objetos que quedan a un lado se van a 
+    clasificar según una clase y los obejtos que quedan al otro lado según otra clase. 
+    Esto es posible realizarlo de manera muy sencilla utilizando un umbral. Los umbrales 
+    pueden tener dos direcciones distintas y especifican para un determinado pixel el 
+    rango aceptable del mismo. 
+
+    Para obtener un clasificador débil correcto hemos de realizar un proceso de "aprendizaje"
+    La idea es generar aleatoriamente A umbrales y utilizarlos para clasificar el conjunto 
+    de aprendizaje. Finalmente, nos quedaremos con el umbral que mejor clasifique, es decir
+    aquel que obtenga menor tasa de error para el conjunto dado. 
+
+
+
+
+
 .............................................................................................
 .............................................................................................
 WeakSorter.java
@@ -28,7 +59,7 @@ Adaboost (x , y)
         {
 
             Pf = GenerarClasificadorAzar(DIMENSION);
-            errK = obtenerErrorClasificador(Pf, x, y, D);
+            errK = obtenerErrorClasificador(Pf, 0, 0, D);
             
             if( errk < menorErr )
             {
@@ -79,8 +110,8 @@ return new (ClasificadorRobusto(listaClasificadorDebil, listaConfianzas));
    {
         error = 0;
         for( i  = 0 >> size() )
-        {
-            res = aplicarClasificadorDebil(Pf, x[i]);
+        {                                              //Pf >> clasificador. 
+            res = aplicarClasificadorDebil(Pf, x[i]); //x[i] es una imagen.
             if( res != y[i] )
             {
                 error += D[i];
@@ -95,7 +126,7 @@ return new (ClasificadorRobusto(listaClasificadorDebil, listaConfianzas));
         valido = -1;
         if(Pf. direccion)
         {
-            if(imagen[pixel] <= Pf.umbral )
+            if(imagen[pixel] <= Pf.umbral ) //umbral del clasificador
             {
                 valido = 1;
             } 
@@ -104,7 +135,7 @@ return new (ClasificadorRobusto(listaClasificadorDebil, listaConfianzas));
         {
             if(imagen[pixel] > Pf.umbral )
             {
-                valido = 1;
+                valido = -1;
             }
         }
 

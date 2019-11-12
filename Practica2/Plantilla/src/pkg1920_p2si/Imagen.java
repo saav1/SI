@@ -22,11 +22,16 @@ public class Imagen {
     private BufferedImage biImage;
     private byte [] imageData;
     
+    private int digito;
+    
     Imagen(){
         biImage = null;
     }
     
-    
+    //imenData 
+    //biImagen = x;
+    //imageData = y;
+    //xo x1, y es el valor de esa coordenada 1
     Imagen(File file){
         try {
             biImage = ImageIO.read(file);
@@ -45,9 +50,9 @@ public class Imagen {
 
             
             //Conversion rápida de color a grises, por si es necesario...
-            //BufferedImage biColor = ImageIO.read(file);
-            //biImage = new BufferedImage(biColor.getWidth(), biColor.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
-            //biImage.getGraphics().drawImage(biColor, 0, 0, null);
+            BufferedImage biColor = ImageIO.read(file);
+            biImage = new BufferedImage(biColor.getWidth(), biColor.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+            biImage.getGraphics().drawImage(biColor, 0, 0, null);
                            
         } catch (IOException e)
         {
@@ -63,5 +68,12 @@ public class Imagen {
         return biImage;
     }
     
+    
+    public int getDigitoPertenece(){
+        return digito;
+    }
+    public void setDigitoPertenece(int dig){
+        digito = dig;
+    }
     
 }

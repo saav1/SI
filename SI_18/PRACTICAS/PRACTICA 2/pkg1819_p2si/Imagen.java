@@ -42,7 +42,6 @@ public class Imagen {
             File file = new File(filename);
             biImage = ImageIO.read(file);
             imageData = ((DataBufferByte)biImage.getRaster().getDataBuffer()).getData();
-
             
             //Conversion rápida de color a grises, por si es necesario...
             //BufferedImage biColor = ImageIO.read(file);
