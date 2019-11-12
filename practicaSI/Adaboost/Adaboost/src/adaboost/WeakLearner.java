@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * <p>Una vez se haya entrenado el clasificador, será capaz de clasificar una imagen en cara o no
  * dependiendo del signo obtenido al evaluar la misma con el mejor hiperplano generado</p>
  * <p>La precisión de este clasificador depende de la cantidad de hiperplanos generados, aunque tampoco hace magia</p>
- * @author pavel
+ * 
  */
 class WeakLearner {
     private Hyperplane best; //El hiperplano con menor error obtenido

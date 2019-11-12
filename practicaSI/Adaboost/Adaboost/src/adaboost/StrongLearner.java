@@ -21,7 +21,7 @@ import java.util.Locale;
  * del clasificador asignando un peso más alto a aquellas imágenes que ha fallado y uno más bajo a aquellas que ha acertado.</p>
  * <p>El próximo clasificador generado tendrá más en cuenta aquellas imágenes que no ha podido acertar el anterior
  * para así intentar ser capaz de clasificar bien aquellas que el otro no pudo.</p>
- * @author pavel
+ * 
  */
 public class StrongLearner {
     private final ArrayList<WeakLearner> weakLearners; //Lista de clasificadores simples, los cuales estarán ponderados según su confianza
