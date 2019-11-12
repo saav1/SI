@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Adaboost:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Adaboost_jar</output-path>
+    <root id="archive" name="Adaboost.jar">
+      <element id="module-output" name="Adaboost" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/Adaboost/lib/gson-2.8.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
