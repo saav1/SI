@@ -44,7 +44,80 @@ public class Main {
         MostrarImagen imgShow = new MostrarImagen();
         imgShow.setImage(img);
         imgShow.mostrar();
+        
+        
+        System.out.println("\n\n\nRecuento");
 
+           
+        
+        //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        //:::::::::::::::::::PROGRAMA::::::::::::::::::::::::::::::::::::::
+        //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+        CargaImagen carga = new CargaImagen();
+                 System.out.println("\n\n[1]");
+        carga.addImagenes(ml);
+                 System.out.println("\n\n[1]");
+                 
+        carga.addEntrenamiento(50);
+                         System.out.println("\n\n[1]");
+
+        carga.addTest(20);
+        
+                 System.out.println("\n\n[1]");
+        double contador = 0;
+         System.out.println("\n\n[1]");
+
+        //if(args.length >= 2)
+        //{
+            //if(args[0].equals("-train"))
+            //{
+                for( int i = 0 ; i < 8 ; i++)
+                {
+                    StrongSorter ss = new StrongSorter();
+                    ss.AlgoritmoAdaboost(carga.getImagenesEntr(), 100, i);
+                    contador = 0;
+                    
+                    for(int k = 0; k < carga.getImagenesEntr().size() ; k++)
+                    {
+                        int coincide;
+                        int res = ss.Clasifica(carga.getImagenesEntr().get(k));
+                        if( i == carga.getImagenesEntr().get(k).getDigitoPertenece()) coincide = 1;
+                        else coincide = 0;
+                        
+                        if(res == coincide) contador++;
+                    }
+                    
+                    float resultado = (float)( (contador) / carga.getImagenesEntr().size() * 100 );
+                    System.out.print("Recuento de aciertos de entrenamiento para " + i + ":      ");
+                    System.out.println("Recuento de aciertos de test para: " + i + ":     ");
+                    System.out.print("     " + resultado +"%");
+                    contador = 0;
+                    for(int k = 0; k < carga.getImagenesTest().size(); k++){    
+                        int coincide;
+                            int res = ss.Clasifica(carga.getImagenesTest().get(k));
+                            if(i == carga.getImagenesTest().get(k).getDigitoPertenece()){
+                                coincide = 1;
+                            }
+                            else{
+                                coincide = 0;
+                            }
+                            if(res == coincide){
+                                contador++;
+                            }
+                    }
+                    System.out.println("                                            " + (float) (((contador)/(carga.getImagenesTest().size()))*100) +"%");
+                }
+                    
+                    
+                
+            /*}
+            else if(args[0].equals("-run"))
+            {
+            }*/
+        //}
+
+        
+        
         
     }
     
