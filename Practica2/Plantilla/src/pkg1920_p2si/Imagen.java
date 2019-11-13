@@ -49,7 +49,7 @@ public class Imagen {
     
     public void addImagenes(MNISTLoader loader){
         
-        for(int i = 0; i < 8 ; i++)
+        for(int i = 0; i <= 9 ; i++)
         {
             ArrayList digitoImagen = loader.getImageDatabaseForDigit(i);
             for(int j = 0 ; j < digitoImagen.size(); j++)
@@ -63,9 +63,11 @@ public class Imagen {
     
     public void addEntrenamiento(){
         
+        System.out.println("Totales size: " + totales.size());
         for(int i = 0; i < totales.size(); i++)
         {
-            System.out.println("Totales : \n" + totales.get(i).getDigitoPertenece() + " \n");
+            
+            System.out.println("Totales :" + totales.get(i).getDigitoPertenece());
         }
         
     }

@@ -6,7 +6,6 @@
 package pkg1920_p2si;
 
 /**
- *
  * @author fidel
  */
 import java.awt.*;

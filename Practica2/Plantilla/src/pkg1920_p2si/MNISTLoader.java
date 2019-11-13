@@ -38,6 +38,7 @@ public class MNISTLoader {
         }
         
         System.out.println("Loaded "+ imagesCount + " images...");
+        System.out.println();
         
     }
     
