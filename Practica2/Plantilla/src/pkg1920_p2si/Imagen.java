@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package pkg1920_p2si;
-
+import java.util.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.IOException;
@@ -21,21 +21,68 @@ public class Imagen {
     
     private BufferedImage biImage;
     private byte [] imageData;
-    
+
+    //-----------------------------------------------------    
     private int digito;
+    private int porcentaje;
+    private ArrayList<Imagen> totales;
+    private ArrayList<Imagen> entrenamiento;
+    private ArrayList<Imagen> test;
+    
+    public void CargaImagen(){
+        totales = new ArrayList<Imagen>();
+        entrenamiento = new ArrayList<Imagen>();
+        test = new ArrayList<Imagen>();
+    } 
+    
+    public ArrayList<Imagen> getTotalImagenes(){
+        return totales;
+    }
+    
+    public ArrayList<Imagen> getImagenesEntrenamiento(){
+        return entrenamiento;
+    }
+
+    public ArrayList<Imagen> getImagenesTest(){
+        return test;
+    }
+    
+    public void addImagenes(MNISTLoader loader){
+        
+        for(int i = 0; i < 8 ; i++)
+        {
+            ArrayList digitoImagen = loader.getImageDatabaseForDigit(i);
+            for(int j = 0 ; j < digitoImagen.size(); j++)
+            {
+                Imagen numero = (Imagen) digitoImagen.get(j);   //Se extrae imamgen por imagen.
+                numero.setDigitoPertenece(i);                   //Se le indica a la imagen el digito que está mostrando.
+                totales.add(numero);    //Se añado todas las imágenes al array 'totales'.
+            }
+        }
+    }
+    
+    public void addEntrenamiento(){
+        
+        for(int i = 0; i < totales.size(); i++)
+        {
+            System.out.println("Totales : \n" + totales.get(i).getDigitoPertenece() + " \n");
+        }
+        
+    }
+    
+    
+    //-----------------------------------------------------
     
     Imagen(){
         biImage = null;
     }
     
-    //imenData 
-    //biImagen = x;
-    //imageData = y;
-    //xo x1, y es el valor de esa coordenada 1
+    
     Imagen(File file){
         try {
             biImage = ImageIO.read(file);
             imageData = ((DataBufferByte)biImage.getRaster().getDataBuffer()).getData();
+
         } catch (IOException ex) {
             Logger.getLogger(Imagen.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -67,7 +114,6 @@ public class Imagen {
     BufferedImage getBufferedImage(){
         return biImage;
     }
-    
     
     public int getDigitoPertenece(){
         return digito;

@@ -20,7 +20,7 @@ public class StrongSorter {
     public StrongSorter(){
         
         wsList = new ArrayList<WeakSorter>();
-        strongSorter = new StrongSorter();
+        strongSorter = this;
     }
     
     public void addClasificadorToLista(WeakSorter weaksorter){
@@ -91,8 +91,6 @@ public class StrongSorter {
     }
    
     //String result = (time < 18) ? "Good day." : "Good evening.";
-
-    
     //::::::::::::::::::::::::::::GET::::::::::::::::::::::::::::::::::::::://
     public StrongSorter getClasificadorFuerte(){
         return strongSorter;

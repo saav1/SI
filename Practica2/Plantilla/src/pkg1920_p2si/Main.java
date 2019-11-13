@@ -17,6 +17,7 @@ public class Main {
     public static int Byte2Unsigned(byte b) {
         return b & 0xFF;
     }
+    
     /**
      * @param args the command line arguments
      */
@@ -46,26 +47,21 @@ public class Main {
         imgShow.mostrar();
         
         
-        System.out.println("\n\n\nRecuento");
 
            
         
         //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
         //:::::::::::::::::::PROGRAMA::::::::::::::::::::::::::::::::::::::
         //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        CargaImagen carga = new CargaImagen();
-                 System.out.println("\n\n[1]");
-        carga.addImagenes(ml);
-                 System.out.println("\n\n[1]");
-                 
-        carga.addEntrenamiento(50);
-                         System.out.println("\n\n[1]");
-
-        carga.addTest(20);
+        Imagen carga = new Imagen();
         
-                 System.out.println("\n\n[1]");
+        carga.CargaImagen();
+        carga.addImagenes(ml);
+                 
+        carga.addEntrenamiento();
+
+        
         double contador = 0;
-         System.out.println("\n\n[1]");
 
         //if(args.length >= 2)
         //{
@@ -73,21 +69,27 @@ public class Main {
             //{
                 for( int i = 0 ; i < 8 ; i++)
                 {
+
                     StrongSorter ss = new StrongSorter();
-                    ss.AlgoritmoAdaboost(carga.getImagenesEntr(), 100, i);
+
+                    ss.AlgoritmoAdaboost(carga.getImagenesEntrenamiento(), 100, i);
+
                     contador = 0;
                     
-                    for(int k = 0; k < carga.getImagenesEntr().size() ; k++)
+
+                    
+                    for(int k = 0; k < carga.getImagenesEntrenamiento().size() ; k++)
                     {
+
                         int coincide;
-                        int res = ss.Clasifica(carga.getImagenesEntr().get(k));
-                        if( i == carga.getImagenesEntr().get(k).getDigitoPertenece()) coincide = 1;
+                        int res = ss.Clasifica(carga.getImagenesEntrenamiento().get(k));
+                        if( i == carga.getImagenesEntrenamiento().get(k).getDigitoPertenece()) coincide = 1;
                         else coincide = 0;
                         
                         if(res == coincide) contador++;
                     }
                     
-                    float resultado = (float)( (contador) / carga.getImagenesEntr().size() * 100 );
+                    float resultado = (float)( (contador) / carga.getImagenesEntrenamiento().size() * 100 );
                     System.out.print("Recuento de aciertos de entrenamiento para " + i + ":      ");
                     System.out.println("Recuento de aciertos de test para: " + i + ":     ");
                     System.out.print("     " + resultado +"%");
