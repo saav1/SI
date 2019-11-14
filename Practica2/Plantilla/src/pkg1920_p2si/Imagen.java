@@ -25,6 +25,7 @@ public class Imagen {
     //-----------------------------------------------------    
     private int digito;
     private int porcentaje;
+    
     private ArrayList<Imagen> totales;
     private ArrayList<Imagen> entrenamiento;
     private ArrayList<Imagen> test;

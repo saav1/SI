@@ -110,8 +110,8 @@ return new (ClasificadorRobusto(listaClasificadorDebil, listaConfianzas));
    {
         error = 0;
         for( i  = 0 >> size() )
-        {                                              //Pf >> clasificador. 
-            res = aplicarClasificadorDebil(Pf, x[i]); //x[i] es una imagen.
+        {                                               
+            res = aplicarClasificadorDebil(Pf, x[i]); 
             if( res != y[i] )
             {
                 error += D[i];

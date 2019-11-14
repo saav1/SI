@@ -12,23 +12,30 @@ import java.util.*;
  */
 public class WeakSorter {
     private int pixel;
-    private int umbral;
-    private int direccion;
+    private int umbral;     //[0(Blanco) 255(Negro)]
+    private int direccion;  //La dirección nos sirve para clasificar el pixel 
+                            //en todas las imágenes.
+                    
     
-    public double error;
-    public double confianza;
+    public double error;    //La suma de pesos en todas las imágenes donde el 
+                            //clasificador no acierta.
+                            
+    public double confianza;    //Menor error mayor confianza.
     
-    public WeakSorter(){
-        pixel = (int) Math.random() * 784;
-        umbral = (int) (Math.random() * 256) - 127;
-        int valor = (int) Math.random() * 2;
-        if(valor == 0) direccion = -1;
-        else direccion = 1;
+    public WeakSorter(int DIM){
+        
+        pixel = getRandomBetween(0,DIM);
+        umbral = getRandomBetween(0, 255);
+        direccion = getRandomBetween(0,1);
         
         error = 0.0;
         confianza = 0.0;
     }
     
+    public int getRandomBetween(int min, int max){
+        int rand = ((int)(Math.random() * ((max - min) + 1)) + min);
+        return rand;
+    }
 
     public int getPixel(){ 
         return pixel; 

@@ -58,8 +58,7 @@ public class Main {
         Imagen carga = new Imagen();
         
         carga.CargaImagen();
-        carga.addImagenes(ml);
-                 
+        carga.addImagenes(ml);                 
         //carga.addEntrenamiento();
 
         double contador = 0;
@@ -70,58 +69,30 @@ public class Main {
             {
                 for( int i = 0 ; i < 8 ; i++)
                 {
-
+                    System.out.println("[1]");
                     StrongSorter ss = new StrongSorter();
-
-                    ss.AlgoritmoAdaboost(carga.getImagenesEntrenamiento(), 100, i);
-
+                    System.out.println("[1.1]");
+                    ss.AlgoritmoAdaboost(carga.getImagenesEntrenamiento(), 10, 10, i);
                     contador = 0;
-
-
-
+                    System.out.println("[2]");
                     for(int k = 0; k < carga.getImagenesEntrenamiento().size() ; k++)
                     {
 
                         int coincide;
-                        int res = ss.Clasifica(carga.getImagenesEntrenamiento().get(k));
                         if( i == carga.getImagenesEntrenamiento().get(k).getDigitoPertenece()) coincide = 1;
                         else coincide = 0;
 
-                        if(res == coincide) contador++;
                     }
 
                     float resultado = (float)( (contador) / carga.getImagenesEntrenamiento().size() * 100 );
-                    System.out.print("Recuento de aciertos de entrenamiento para " + i + ":      ");
-                    System.out.println("Recuento de aciertos de test para: " + i + ":     ");
+                    System.out.print("Recuento que coincide: " + resultado);
                     System.out.print("     " + resultado +"%");
-                    contador = 0;
-                    for(int k = 0; k < carga.getImagenesTest().size(); k++)
-                    {    
-                        int coincide;
-                            int res = ss.Clasifica(carga.getImagenesTest().get(k));
-                            if(i == carga.getImagenesTest().get(k).getDigitoPertenece())
-                            {
-                                coincide = 1;
-                            }
-                            else{
-                                coincide = 0;
-                            }
-                            if(res == coincide){
-                                contador++;
-                            }
-                    }
-                    System.out.println("                                            " + (float) (((contador)/(carga.getImagenesTest().size()))*100) +"%");
                 }
-
-
-
             }
             else if(args[0].equals("-run"))
             {
             System.out.println("RUN : NOT IMPLEMENTED YET!");
             }
-            
-        
         }
         catch(Exception e)
         {
