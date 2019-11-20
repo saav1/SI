@@ -15,12 +15,9 @@ public class StrongSorter {
     private double confianza;
     private double error;
     
-    private StrongSorter strongSorter;
     
-    public StrongSorter(){
-        
+    public StrongSorter(){        
         wsList = new ArrayList<WeakSorter>();
-        strongSorter = this;
     }
     
     public StrongSorter(ArrayList<WeakSorter> listaClasificadorDebil,ArrayList<Double> listaConfianza){
@@ -70,8 +67,7 @@ public class StrongSorter {
 
         for(int i = 0 ; i < listaEntrenamiento.size(); i++) D[i] = 1/N; //Inicializo los pesos de las imágenes a 1.
                                                                         //Nuestro vector de pesos va a determinar cuál es el peso de cada imágen
-                                                                        //Si nuestro clasificador falla, el peso de la imágen aumenta.
-                                                                
+                                                                        //Si nuestro clasificador falla, el peso de la imágen aumenta.                                   
         ArrayList<WeakSorter> listaDebiles = null;
         ArrayList<Double> listaConfianza = null;
         
@@ -148,7 +144,7 @@ public class StrongSorter {
         return new WeakSorter(DIM);
     }
     
-    public double obtenerErrorClasificador(WeakSorter ws, ArrayList<Imagen> lista , int y, double[] D, int[] acierto){
+    public double obtenerErrorClasificador(WeakSorter ws, ArrayList<Imagen> lista , int y, double[] D){
         double error = 0.0;
         
         for(int i = 0; i < D.length; i++){
@@ -160,7 +156,7 @@ public class StrongSorter {
     }
     
     
-    public int aplicarClasificadorDebil(WeakSorter ws, Imagen imagen, int[] acierto){
+    public int aplicarClasificadorDebil(WeakSorter ws, Imagen imagen){
         int valido = -1;
         
         byte[] imagenData = imagen.getImageData();
