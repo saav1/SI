@@ -208,7 +208,7 @@ public class Aestrella {
         
         Nodo nodo = new Nodo(path.get(path.size() - 1));
         Nodo moveNodo = new Nodo(path.get(path.size() - 2));
-        System.out.println("....................................................Mover");
+        //System.out.println("....................................................Mover");
 
         int x = nodo.x - moveNodo.x;
         int y = nodo.y - moveNodo.y;
@@ -283,6 +283,11 @@ public class Aestrella {
         return Laberinto.ARRIBA;
     }
     
+    
+    private double heuristicaUno(){
+        return 1;
+    }
+    
     private double heuristicaEuclidea(Nodo inicio, Nodo destino){
         //Euclidea
         double x = (double)Math.pow(destino.x - inicio.x, 2);
@@ -326,7 +331,6 @@ public class Aestrella {
         ArrayList<Nodo> listaInterior = new ArrayList<>();
         ArrayList<Nodo> listaFrontera = new ArrayList<>();
 
-        
         //Guardo la posición de Inicio y el objetivo(Pacman)
         int[] posFantasma = laberinto.obtenerPosicionFantasma(numeroFantasma);
         int[] posPacman = laberinto.obtenerPosicionPacman();
@@ -340,6 +344,7 @@ public class Aestrella {
         
         int cont = 0;
         expandidos = 0;
+        
         while(!listaFrontera.isEmpty()){
                         
             //Elijo el nodo con f mas prometedor de listaFrontera
@@ -384,12 +389,20 @@ public class Aestrella {
                 Nodo vecino = nodo.vecinos.get(i);
                 
                 if(!containsPosition(vecino.x, vecino.y, listaInterior)){
-                    double auxG = vecino.g + heuristicaEuclidea(vecino, nodo);
+                    
+                    //double auxG = vecino.g + heuristicaEuclidea(vecino, nodo);
+                    //double auxG = vecino.g + heuristicaUno();
+                    double auxG = vecino.g + heuristicaManhattan(vecino, nodo);
+                    
                     //System.out.println("auxG: " + auxG + ", vecino.g: " + vecino.g + ", " + nodo.g);
                     if(!containsPosition(vecino.x, vecino.y, listaFrontera)){
 
                      vecino.g = nodo.g + 1;
-                     vecino.h = heuristicaEuclidea(nodo, nodoFinal);
+                     
+                     //vecino.h = heuristicaEuclidea(nodo, nodoFinal);
+                     //vecino.h = heuristicaUno();
+                     vecino.h = heuristicaManhattan(nodo, nodoFinal);
+                     
                      vecino.f = vecino.g + vecino.h;
                      vecino.padre = nodo;
                      listaFrontera.add(vecino);
@@ -397,7 +410,12 @@ public class Aestrella {
                     }else if(auxG <= nodo.g){
                      vecino.padre = nodo;
                      vecino.g = auxG;
-                     vecino.h = heuristicaEuclidea(vecino, nodoFinal);
+                     
+                     
+                     //vecino.h = heuristicaEuclidea(vecino, nodoFinal);
+                     //vecino.h = heuristicaUno();
+                     vecino.h = heuristicaManhattan(vecino, nodoFinal);
+                     
                      vecino.f = vecino.g + vecino.h;
                     }                 
                 }      
@@ -489,12 +507,21 @@ public class Aestrella {
                 Nodo vecino = nodo.vecinos.get(i);
                 
                 if(!containsPosition(vecino.x, vecino.y, listaInterior)){
-                    double auxG = vecino.g + heuristicaEuclidea(vecino, nodo);
+                    
+                    //double auxG = vecino.g + heuristicaEuclidea(vecino, nodo);
+                    double auxG = vecino.g + heuristicaUno();
+                    //double auxG = vecino.g + heuristicaManhattan(vecino, nodo);
+                    
                     //System.out.println("auxG: " + auxG + ", vecino.g: " + vecino.g + ", " + nodo.g);
                     if(!containsPosition(vecino.x, vecino.y, listaFrontera)){
 
                      vecino.g = nodo.g + 1;
-                     vecino.h = heuristicaManhattan(nodo, nodoFinal);
+                     
+                     //vecino.h = heuristicaEuclidea(nodo, nodoFinal);
+                     vecino.h = heuristicaUno();
+                     //vecino.h = heuristicaManhattan(nodo, nodoFinal);
+                     
+                     
                      vecino.f = vecino.g + vecino.h;
                      vecino.padre = nodo;
                      listaFrontera.add(vecino);
@@ -502,7 +529,11 @@ public class Aestrella {
                     }else if(auxG <= nodo.g){
                      vecino.padre = nodo;
                      vecino.g = auxG;
-                     vecino.h = heuristicaManhattan(vecino, nodoFinal);
+                     
+                     //vecino.h = heuristicaEuclidea(vecino, nodoFinal);
+                     vecino.h = heuristicaUno();
+                     //vecino.h = heuristicaManhattan(vecino, nodoFinal);
+                     
                      vecino.f = vecino.g + vecino.h;
                     }                 
                 }      
@@ -534,4 +565,3 @@ public class Aestrella {
         }
     } 
 }
-    
