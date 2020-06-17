@@ -22,6 +22,7 @@ public class Main {
      */
     public static void main(String[] args) {
         
+        /*
         //Cargador MNIST de SI
         MNISTLoader ml = new MNISTLoader();
         ml.loadDBFromPath("./mnist_1000");
@@ -44,8 +45,93 @@ public class Main {
         MostrarImagen imgShow = new MostrarImagen();
         imgShow.setImage(img);
         imgShow.mostrar();
+        */
+        
+        //-----------------------------------------------------------
+        //::::::::::::::::::::::::: ADABOOST ::::::::::::::::::::::::
+        //-----------------------------------------------------------
+        
+        int porcentaje  = 50;
+        int numPruebas  = 1000;
+        int numDebiles  = 100;
+        int numAciertos = 0;
+        
+        long start, end;
 
         
+        ArrayList<Imagen>               imagenCargada;
+        ArrayList<ClasificadorFuerte>   ClasificadoresFuertes;
+        ArrayList<Integer>              mejoresH;
+        
+        
+        Adaboost adaboost = new Adaboost(porcentaje, numDebiles, numPruebas);
+        
+        if( args[0].equals("-t") ){
+        
+            System.out.println("Entrenando para todos los dígitos\n");
+            
+            start = System.currentTimeMillis();
+            
+            ClasificadoresFuertes = 
+            
+            
+        }
+        
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 }

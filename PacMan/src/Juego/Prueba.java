@@ -17,7 +17,7 @@ public class Prueba {
         Prueba pr= new Prueba();
         
         if (args.length==0)
-            mundo=new File ("Mundos/peque.txt");
+            mundo=new File ("Mundos/prueba.txt");
         else
             mundo=new File(args[0]);
         
