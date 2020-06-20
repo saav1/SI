@@ -46,7 +46,7 @@ public class ClasificadorFuerte {
         int umbral     = getRandomBetween(0, 255);
         int direccion  = getRandomBetween(0, 1);
 
-        return new ClasificadorDebil(pixel, umbral, direccion);
+        return new ClasificadorDebil(pixel, umbral, direccion, 0, 0);
 
     }
     

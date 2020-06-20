@@ -22,6 +22,18 @@ public class Imagen {
     private BufferedImage biImage;
     private byte [] imageData;
     
+    //autor: STALYN ALEJANDRO 
+    private float peso;
+    
+    public float getPeso(){
+        return this.peso;
+    }
+    
+    public void setPeso(float peso){
+        this.peso = peso;
+    }
+    
+    
     Imagen(){
         biImage = null;
     }

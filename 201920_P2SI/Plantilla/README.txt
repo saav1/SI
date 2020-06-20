@@ -155,7 +155,30 @@ confianza = 0.5f * (float)Math.log10(1.0f - error) / error;
 
 
 
+/*
+//Cargador MNIST de SI
+MNISTLoader ml = new MNISTLoader();
+ml.loadDBFromPath("./mnist_1000");
 
+//Accedo a las imagenes de dígito 1
+ArrayList d0imgs = ml.getImageDatabaseForDigit(1);
+
+//Y cojo la tercera imagen del dígito 1
+Imagen img = (Imagen) d0imgs.get(2);
+
+//La invierto para ilustrar como acceder a los pixels
+byte imageData[] = img.getImageData();
+for (int i = 0; i < imageData.length; i++){
+
+    imageData[i] = (byte) (255 - imageData[i]);
+    System.out.print(Byte2Unsigned(imageData[i])+ ",");
+}
+
+//Muestro la imagen invertida
+MostrarImagen imgShow = new MostrarImagen();
+imgShow.setImage(img);
+imgShow.mostrar();
+*/
 
 
 
