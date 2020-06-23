@@ -188,7 +188,45 @@ imgShow.mostrar();
 
 
 
+            
+            ArrayList<Boolean> clasificados = cDebil.aplicarDebil(entrenamiento);
+            
+            
+            //Actualizar los pesos de las imágenes.
+            float z = 0.0f;
+            float num = 0.0f;
+            float peso = 0.0f;
+            
+            for( int j = 0; j < entrenamiento.size(); j++ ){
+                
+                System.out.println(" get Peso j : " + j + " : " + entrenamiento.get(j).getPeso() );
+                
+                
+                peso = entrenamiento.get(j).getPeso();
+                
+                if( clasificados.get(j).equals(correctos.get(j))) num = peso * (float)Math.pow(Math.E, -cDebil.getConfianza());
+                else num = peso * (float)Math.pow(Math.E, cDebil.getConfianza());
+                
+                
+                entrenamiento.get(j).setPeso(num);
+                
+                z += num;
+                
+                
+               //System.out.println("\n\n\t" + z + " " + num + " " + peso + " ");
 
+            }
+            
+            
+            
+            //Normalizar pesos.
+            for( int j = 0; j < entrenamiento.size(); j++ ){
+                
+                peso = entrenamiento.get(j).getPeso() / z;
+                entrenamiento.get(j).setPeso(peso);
+                
+            }
+            
 
 
 
