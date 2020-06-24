@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Adaboost">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/Adaboost.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
